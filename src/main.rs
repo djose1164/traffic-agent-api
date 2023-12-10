@@ -8,7 +8,7 @@ mod services;
 use repository::database::establish_connection;
 use routes::{
     user::{create, login},
-    traffic_ticket::traffic_tickets,
+    traffic_ticket::{traffic_tickets, get_traffic_ticket},
     vehicle::vehicle_index,
     drivers::driver_index
 };
@@ -42,6 +42,7 @@ async fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/traffic_tickets")
                     .service(traffic_tickets)
+                    .service(get_traffic_ticket)
             )
             .service(
                 web::scope("/vehicles")

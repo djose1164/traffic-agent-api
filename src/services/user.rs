@@ -1,8 +1,8 @@
-use crate::models::user::{User, UserPayload, NewUser};
+use crate::models::user::{User, UserPayload, NewUser, UserCredentials, self};
 use crate::repository::database::{DbError, DbConnection};
 use diesel::prelude::*;
 
-pub fn authenticate_user(user: UserPayload, conn: &mut DbConnection) -> Result<User, DbError> {
+pub fn authenticate_user(user: UserCredentials, conn: &mut DbConnection) -> Result<User, DbError> {
     use crate::models::schema::users::dsl::*;
 
     let fetched = users
@@ -30,6 +30,16 @@ pub fn create_user(user: UserPayload, conn: &mut DbConnection) -> Result<User, D
     let fetched = users
         .order(id.desc())
         .limit(1)
+        .first(conn)?;
+
+    Ok(fetched)
+}
+
+pub fn find_by(user_id: i32, conn: &mut DbConnection) -> Result<User, DbError> {
+    use crate::models::schema::users::dsl::*;
+
+    let fetched = users
+        .find(user_id)
         .first(conn)?;
 
     Ok(fetched)

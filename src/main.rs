@@ -1,5 +1,5 @@
 use actix_web::{get, middleware, web, App, Responder, HttpResponse, HttpServer};
-
+use actix_files as fs;
 mod repository;
 mod models;
 mod routes;
@@ -9,8 +9,10 @@ use repository::database::establish_connection;
 use routes::{
     user::{create, login},
     traffic_ticket::traffic_tickets,
-    vehicle::vehicle_index
+    vehicle::vehicle_index,
+    drivers::driver_index
 };
+
 
 #[get("/")]
 async fn index() -> impl Responder {
@@ -44,6 +46,11 @@ async fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/vehicles")
                     .service(vehicle_index)
+            )
+            .service(fs::Files::new("/assets", "./assets").show_files_listing())
+            .service(
+                web::scope("/drivers")
+                    .service(driver_index)   
             )
     })
     .bind(("127.0.0.1", 8080))?

@@ -33,3 +33,9 @@ pub struct UserPayload {
     pub email: String,
     pub password: String,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UserCredentials {
+    pub email: String,
+    pub password: String,
+}
